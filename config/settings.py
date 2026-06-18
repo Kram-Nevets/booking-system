@@ -27,6 +27,10 @@ SECRET_KEY = 'django-insecure--pg@y_z-a1qrm*9rc8l74=aik$)07t_lrvf@kjdjqhqx%g#bmg
 DEBUG = True
 
 ALLOWED_HOSTS = []
+AUTH_USER_MODEL = 'admin_side.User'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = 'login'
 
 
 # Application definition

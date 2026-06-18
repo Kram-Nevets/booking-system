@@ -10,7 +10,7 @@ class User(AbstractUser):
         ('staff', 'Staff'),
         ('customer', 'Customer'),
     )
-   uuid = models.UUIDField(unique=True, editable=False)
+   uuid = models.UUIDField(unique=True, editable=False, null=True, blank=True)
    first_name = models.CharField(max_length=50)
    last_name = models.CharField(max_length=50)
    phone_number = models.CharField(max_length=15)
