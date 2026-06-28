@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Booking App Admin{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS Engine Core Integration -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: {
+                            850: '#141d2f'
+                        }
+                    },
+                    // Mapping your customized CSS cubic-bezier curves & animation sequences
+                    transitionTimingFunction: {
+                        'smooth-curve': 'cubic-bezier(0.4, 0, 0.2, 1)',
+                    },
+                    animation: {
+                        'page-fade-in': 'fadeInPage 500ms cubic-bezier(0.4, 0, 0.2, 1) forwards',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        /* Mapping raw layout grid system directly matching original architecture */
+        @media (min-width: 769px) {
+            body {
+                display: grid !important;
+                grid-template-columns: 260px 1fr;
+                grid-template-rows: 70px 1fr;
+                grid-template-areas: 
+                    "sidebar header"
+                    "sidebar main";
+            }
+            #sidebar { grid-area: sidebar; }
+            #main-header { grid-area: header; }
+            #content { grid-area: main; }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                display: grid !important;
+                grid-template-columns: 1fr;
+                grid-template-rows: 70px 1fr;
+                grid-template-areas: 
+                    "header"
+                    "main";
+            }
+            #main-header { grid-area: header; }
+            #content { grid-area: main; }
+        }
+
+        /* Re-implementing exact CSS Keyframe sequences inside Tailwind context */
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInLink {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Staggered cascading item entrance effects matching original specs */
+        #sidebar.active .sidebar-nav li {
+            animation: fadeInLink 250ms cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+        #sidebar.active .sidebar-nav li:nth-child(1) { animation-delay: 50ms; }
+        #sidebar.active .sidebar-nav li:nth-child(2) { animation-delay: 90ms; }
+        #sidebar.active .sidebar-nav li:nth-child(3) { animation-delay: 130ms; }
+        #sidebar.active .sidebar-nav li:nth-child(4) { animation-delay: 170ms; }
+    </style>
+</head>
+<body class="bg-[#f8fafc] text-[#1e293b] min-h-screen antialiased font-sans">
+
+    <!-- Mobile Navigation Toggle Button Container -->
+    <span id="mobile-menu-toggle" class="hidden max-[768px]:block text-[20px] font-bold cursor-pointer py-2.5 px-3.5 text-[#1e293b] fixed top-3.5 left-4 z-[110] bg-white rounded-md leading-none shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] transition-[left,background,color] duration-250 ease-smooth-curve active:scale-90 [&.active]:left-[210px] [&.active]:bg-[#0f172a] [&.active]:text-[#94a3b8] [&.active]:border-white/10 [&.active]:shadow-none hover:[&.active]:text-white">&#9776;</span>
+
+    <!-- Navigation Control Sidebar Block -->
+    <aside id="sidebar" class="bg-[#0f172a] text-white flex flex-col border-r border-white/5 z-[100] max-[768px]:fixed max-[768px]:top-0 max-[768px]:left-[-260px] max-[768px]:w-[260px] max-[768px]:height-[100vh] max-[768px]:h-screen max-[768px]:transition-transform max-[768px]:duration-250 max-[768px]:ease-smooth-curve max-[768px]:translate-x-0 max-[768px]:[&.active]:translate-x-[260px]">
+        <div class="sidebar-header p-6 border-b border-white/5">
+            <h1 class="text-b text-[1.25rem] font-bold tracking-[-0.5px] text-white">Booking App</h1>
+            <h2 class="text-[0.75rem] uppercase tracking-[1px] text-[#38bdf8] mt-1 font-semibold">Admin Menu</h2>
+        </div>
+        <nav class="sidebar-nav flex-1 py-6 px-4">
+            <ul class="list-none">
+                <li class="mb-2"><a class="flex items-center py-3 px-4 rounded-lg text-[0.95rem] font-medium text-[#94a3b8] transition-[background,color,transform] duration-150 ease-smooth-curve hover:bg-[#1e293b] hover:text-white hover:translate-x-1 active:translate-x-[2px] active:scale-[0.98]" href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li class="mb-2"><a class="flex items-center py-3 px-4 rounded-lg text-[0.95rem] font-medium text-[#94a3b8] transition-[background,color,transform] duration-150 ease-smooth-curve hover:bg-[#1e293b] hover:text-white hover:translate-x-1 active:translate-x-[2px] active:scale-[0.98]" href="{% url 'rooms_list' %}">Rooms</a></li>
+                <li class="mb-2"><a class="flex items-center py-3 px-4 rounded-lg text-[0.95rem] font-medium text-[#94a3b8] transition-[background,color,transform] duration-150 ease-smooth-curve hover:bg-[#1e293b] hover:text-white hover:translate-x-1 active:translate-x-[2px] active:scale-[0.98]" href="{% url 'booking_list' %}">Bookings</a></li>
+                <li class="mb-2"><a class="flex items-center py-3 px-4 rounded-lg text-[0.95rem] font-medium text-[#94a3b8] transition-[background,color,transform] duration-150 ease-smooth-curve hover:bg-[#1e293b] hover:text-white hover:translate-x-1 active:translate-x-[2px] active:scale-[0.98]" href="#">Users</a></li>
+                <li class="mb-2"><a class="flex items-center py-3 px-4 rounded-lg text-[0.95rem] font-medium text-[#94a3b8] transition-[background,color,transform] duration-150 ease-smooth-curve hover:bg-[#1e293b] hover:text-white hover:translate-x-1 active:translate-x-[2px] active:scale-[0.98]" href="#">Settings</a></li>
+                
+
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Global Workspace Header Component -->
+    <header id="main-header" class="bg-white border-b border-[#e2e8f0] flex justify-between items-center py-0 px-8 sticky top-0 z-[90] max-[768px]:pl-20">
+        <div class="header-content">
+            <h1 class="text-[1.1rem] font-semibold text-[#1e293b] max-[768px]:hidden">Dashboard Control Panel</h1>
+        </div>
+
+        <nav class="main-nav">
+            <ul class="list-none flex gap-4 items-center">
+                <li><a class="nav-link text-[0.875rem] font-medium text-[#64748b] transition-colors duration-150 ease-smooth-curve hover:text-[#1e293b]" href="{% url 'dashboard' %}">Home</a></li>
+                {% if user.is_authenticated %}
+                    <li><a class="nav-btn bg-[#2563eb] text-white py-2 px-4 rounded-[6px] text-[0.875rem] font-medium transition-[background-color,transform] duration-150 ease-smooth-curve inline-block hover:bg-[#1d4ed8] hover:-translate-y-[1px] hover:shadow-[0_4px_12px_rgba(37,99,235,0.15)] active:translate-y-0 active:scale-[0.96]" href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                    <li><a class="nav-btn bg-[#2563eb] text-white py-2 px-4 rounded-[6px] text-[0.875rem] font-medium transition-[background-color,transform] duration-150 ease-smooth-curve inline-block hover:bg-[#1d4ed8] hover:-translate-y-[1px] hover:shadow-[0_4px_12px_rgba(37,99,235,0.15)] active:translate-y-0 active:scale-[0.96]" href="{% url 'login' %}">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Dynamic Content Region -->
+    <main class="content p-10 max-w-[1200px] w-full justify-self-center animate-page-fade-in max-[768px]:py-6 max-[768px]:px-4" id="content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Execution and Interaction Scripts -->
+    <script>
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+
+        function toggleMenu() {
+            const isActive = sidebar.classList.toggle('active');
+            mobileMenuToggle.classList.toggle('active');
+            
+            // Icon transformation switch logic
+            mobileMenuToggle.innerHTML = isActive ? '&#10005;' : '&#9776;';
+        }
+
+        mobileMenuToggle.addEventListener('click', (e) => {
+            toggleMenu();
+            e.stopPropagation();
+        });
+
+        // Close sidebar safely if clicked outside 
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+                if (!sidebar.contains(e.target) && e.target !== mobileMenuToggle) {
+                    toggleMenu();
+                }
+            }
+        });
+    </script>
+    
+</body>
+</html>

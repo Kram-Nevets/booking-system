@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import uuid
 
 
 
@@ -10,12 +11,12 @@ class User(AbstractUser):
         ('staff', 'Staff'),
         ('customer', 'Customer'),
     )
-   uuid = models.UUIDField(unique=True, editable=False, null=True, blank=True)
+   uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
    first_name = models.CharField(max_length=50)
    last_name = models.CharField(max_length=50)
    phone_number = models.CharField(max_length=15)
    email = models.EmailField(unique=True)
-   role = models.CharField(max_length=20, choices=CHOICES)
+   role = models.CharField(max_length=20, choices=CHOICES, default='customer')
    is_active = models.BooleanField(default=True)
    created_at = models.DateTimeField(auto_now_add=True)
    updated_at = models.DateTimeField(auto_now=True)
@@ -30,10 +31,11 @@ class Rooms(models.Model):
         )
     ROOM_STATUS_CHOICES = (
         ('available', 'Available'),
+        ('occupied', 'Occupied'), 
         ('Unavailable', 'Unavailable'),
     )
 
-    uuid = models.UUIDField(unique=True, editable=False)
+    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     room_number = models.IntegerField()
     room_name = models.CharField(max_length=50,null=True,blank=True)
     room_type = models.CharField(max_length=50, choices=ROOM_TYPE_CHOICES)
@@ -42,7 +44,13 @@ class Rooms(models.Model):
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2)
     is_available = models.BooleanField()
     description = models.TextField()
-    room_image = models.ImageField(upload_to='room_images/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class room_images(models.Model):
+    room = models.ForeignKey(Rooms, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='room_images/')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -57,7 +65,7 @@ class Booking(models.Model):
     )
 
 
-    uuid = models.UUIDField(unique=True, editable=False)
+    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Rooms, on_delete=models.CASCADE)
     checkin = models.DateTimeField()
@@ -82,7 +90,7 @@ class Payment(models.Model):
         ('failed', 'Failed'),
     )
 
-    uuid = models.UUIDField(unique=True, editable=False)
+    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES)
     payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS_CHOICES)
@@ -93,7 +101,7 @@ class Payment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Feedback(models.Model):
-    uuid = models.UUIDField(unique=True, editable=False)
+    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Rooms, on_delete=models.CASCADE)
     rating = models.IntegerField()
@@ -104,7 +112,7 @@ class Feedback(models.Model):
 
 class UserActivityTracking(models.Model):
 
-    uuid = models.UUIDField(unique=True, editable=False)
+    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     activity_type = models.CharField(max_length=50)
     activity_description = models.TextField()

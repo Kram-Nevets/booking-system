@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}Rooms{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    
+    <!-- Content Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-6 mb-6 border-b border-slate-200">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Rooms List</h1>
+            <p class="text-sm text-slate-500 mt-1">Manage, update, and monitor all rooms available in the system.</p>
+        </div>
+        <div class="mt-4 sm:mt-0">
+            <a href="{% url 'room_create' %}" class="inline-flex items-center justify-center bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-sm transition-all duration-150 hover:bg-blue-700 hover:shadow-md active:scale-95">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                Add New Room
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        
+        <!-- Desktop Table (Hidden on small screens) -->
+        <div class="hidden md:block overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200">
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Room Details</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Number</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Type</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Capacity</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Price / Night</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for room in rooms %}
+                    <tr class="hover:bg-slate-50/70 transition-colors duration-150">
+                        <!-- Room Name treated as primary anchor -->
+                        <td class="px-6 py-4 font-semibold text-slate-900 whitespace-nowrap">
+                            {{ room.room_name }}
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-600 whitespace-nowrap">
+                            <span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded md text-xs font-mono font-medium">{{ room.room_number }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-600 whitespace-nowrap">
+                            {{ room.room_type }}
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-600 whitespace-nowrap">
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                {{ room.capacity }} guests
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm font-medium text-slate-900 whitespace-nowrap">
+                            ${{ room.price_per_night }} <!-- Styled with a fallback $ sign -->
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {% if room.room_status|lower == 'available' %}
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Available
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Occupied
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex justify-end items-center gap-3">
+                                <a href="#" class="text-blue-600 hover:text-blue-800 transition-colors">Edit</a>
+                                <span class="text-slate-300">|</span>
+                                <a href="{% url 'room_delete' room.id %}" class="text-red-600 hover:text-red-800 transition-colors">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="px-6 py-10 text-center text-sm text-slate-500">
+                            No rooms found. Click "Add New Room" to get started.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile View (Card Layout - Hidden on Desktop) -->
+        <div class="block md:hidden divide-y divide-slate-100">
+            {% for room in rooms %}
+            <div class="p-4 hover:bg-slate-50 transition-colors">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <h3 class="font-semibold text-slate-900">{{ room.room_name }}</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Room #{{ room.room_number }} • {{ room.room_type }}</p>
+                    </div>
+                    {% if room.room_status == 'available' %}
+                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            Available
+                        </span>
+                    {% else %}
+                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                            Occupied
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-100">
+                    <div class="flex gap-4 text-xs text-slate-600">
+                        <div><span class="font-medium text-slate-900">${{ room.price_per_night }}</span>/night</div>
+                        <div>Cap: <span class="font-medium text-slate-900">{{ room.capacity }}</span></div>
+                    </div>
+                    <div class="flex gap-3 text-xs font-medium">
+                        <a href="#" class="text-blue-600">Edit</a>
+                        <a href="{% url 'room_delete' room.id %}" class="text-red-600">Delete</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="p-6 text-center text-sm text-slate-500">
+                No rooms found. Click "Add New Room" to get started.
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

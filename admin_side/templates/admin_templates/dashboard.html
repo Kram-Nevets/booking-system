@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %} | Dashboard{% endblock %}
+
+{% block content %}
+    <!-- Content Header Section -->
+    <div class="content-header mb-8 pb-5 border-b border-slate-200/60 max-[768px]:mb-6 max-[768px]:pb-4">
+        <h1 class="text-2xl font-bold tracking-tight text-[#1e293b] sm:text-3xl">Dashboard</h1>
+        <p class="subtitle text-sm text-[#64748b] mt-1.5 font-medium">Welcome back, {{ request.user.username }}!</p>
+    </div>
+
+    <!-- Dashboard Statistical Cards Grid Grid -->
+    <div class="dashboard-cards grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 max-[768px]:gap-4">
+        
+        <!-- Total Users Card Block -->
+        <div class="card bg-white rounded-xl border border-[#e2e8f0] p-6 shadow-sm shadow-slate-100 transition-[transform,box-shadow] duration-200 ease-smooth-curve hover:-translate-y-0.5 hover:shadow-md hover:shadow-slate-200/50">
+            <div class="card-info">
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-[#64748b]">Total Users</h2>
+                <p class="text-3xl font-bold tracking-tight text-[#1e293b] mt-2 flex items-baseline gap-1">
+                    {{ total_users }}
+                    <span class="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full ml-2 inline-flex items-center">Active</span>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Total Rooms Card Block -->
+        <div class="card bg-white rounded-xl border border-[#e2e8f0] p-6 shadow-sm shadow-slate-100 transition-[transform,box-shadow] duration-200 ease-smooth-curve hover:-translate-y-0.5 hover:shadow-md hover:shadow-slate-200/50">
+            <div class="card-info">
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-[#64748b]"><a href="{% url 'rooms_list' %}"><u>Total Rooms</u></a></h2>
+                <p class="text-3xl font-bold tracking-tight text-[#1e293b] mt-2">{{ total_rooms }}</p>
+            </div>
+        </div>
+        
+        <!-- Total Bookings Card Block -->
+        <div class="card bg-white rounded-xl border border-[#e2e8f0] p-6 shadow-sm shadow-slate-100 transition-[transform,box-shadow] duration-200 ease-smooth-curve hover:-translate-y-0.5 hover:shadow-md hover:shadow-slate-200/50 max-[639px]:sm:col-span-2 lg:col-span-1">
+            <div class="card-info">
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-[#64748b]"><a href="{% url 'booking_list' %}"><u>Total Bookings</u></a></h2>
+                <p class="text-3xl font-bold tracking-tight text-[#2563eb] mt-2">{{ total_bookings }}</p>
+            </div>
+        </div>
+
+        <!-- Occupied Rooms Card Block -->
+        <div class="card bg-white rounded-xl border border-[#e2e8f0] p-6 shadow-sm shadow-slate-100 transition-[transform,box-shadow] duration-200 ease-smooth-curve hover:-translate-y-0.5 hover:shadow-md hover:shadow-slate-200/50 max-[639px]:sm:col-span-2 lg:col-span-1">
+            <div class="card-info">
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-[#64748b]"><a href="#"><u>Occupied Rooms</u></a></h2>
+                <p class="text-3xl font-bold tracking-tight text-[#f59e0b] mt-2">{{ occupied_rooms }}</p>
+            </div>
+        </div>
+
+        <div class="card bg-white rounded-xl border border-[#e2e8f0] p-6 shadow-sm shadow-slate-100 transition-[transform,box-shadow] duration-200 ease-smooth-curve hover:-translate-y-0.5 hover:shadow-md hover:shadow-slate-200/50 max-[639px]:sm:col-span-2 lg:col-span-1">
+            <div class="card-info">
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-[#64748b]"><a href="#"><u>Available Rooms</u></a></h2>
+                <p class="text-3xl font-bold tracking-tight text-[#10b981] mt-2">{{ available_rooms }}</p>
+            </div>
+        </div>
+
+        <div class="card bg-white rounded-xl border border-[#e2e8f0] p-6 shadow-sm shadow-slate-100 transition-[transform,box-shadow] duration-200 ease-smooth-curve hover:-translate-y-0.5 hover:shadow-md hover:shadow-slate-200/50 max-[639px]:sm:col-span-2 lg:col-span-1">
+            <div class="card-info">
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-[#64748b]"><a href="#"><u>Cancelled Bookings</u></a></h2>
+                <p class="text-3xl font-bold tracking-tight text-[#ef4444] mt-2">{{ cancelled_bookings }}</p>
+            </div>
+        </div>
+
+        <div class="card bg-white rounded-xl border border-[#e2e8f0] p-6 shadow-sm shadow-slate-100 transition-[transform,box-shadow] duration-200 ease-smooth-curve hover:-translate-y-0.5 hover:shadow-md hover:shadow-slate-200/50 max-[639px]:sm:col-span-2 lg:col-span-1">
+            <div class="card-info">
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-[#64748b]"><a href="#"><u>Pending Bookings</u></a></h2>
+                <p class="text-3xl font-bold tracking-tight text-[#2563eb] mt-2">{{ pending_bookings }}</p>
+            </div>
+        </div>
+
+        <div class="card bg-white rounded-xl border border-[#e2e8f0] p-6 shadow-sm shadow-slate-100 transition-[transform,box-shadow] duration-200 ease-smooth-curve hover:-translate-y-0.5 hover:shadow-md hover:shadow-slate-200/50 max-[639px]:sm:col-span-2 lg:col-span-1">
+            <div class="card-info">
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-[#64748b]"><a href="#"><u>Unavailable Rooms</u></a></h2>
+                <p class="text-3xl font-bold tracking-tight text-[#ef4444] mt-2">{{ rooms_unavailable }}</p>
+            </div>
+        </div>
+
+    </div> 
+{% endblock %}

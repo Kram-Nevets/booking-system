@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %} | Add New Room{% endblock %}
+
+{% block content %}
+
+<div class="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-6 mb-6 border-b border-slate-200">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Add New Room</h1>
+            <p class="text-sm text-slate-500 mt-1">Create a new room listing by filling out the form below.</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        
+        {% if form.errors %}
+        <div class="mb-6 bg-rose-50 border border-rose-200 rounded-lg p-4 text-sm text-rose-700">
+            <div class="flex items-start">
+                <svg class="w-5 h-5 mr-2.5 flex-shrink-0 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <div>
+                    <span class="font-semibold">Please correct the errors below:</span>
+                    <ul class="list-disc list-inside mt-1 gap-1 text-xs">
+                        {% for field, errors in form.errors.items %}
+                            <li><strong>{{ field|title }}:</strong> {{ errors|striptags }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'room_create' %}" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="room_number" class="block text-sm font-semibold text-slate-700 mb-1.5">Room Number</label>
+                    <input type="number" id="room_number" name="room_number" value="{{ form.room_number.value|default:'' }}" class="block w-full rounded-lg border border-slate-300 bg-slate-50/50 px-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:outline-hidden transition-all duration-150 text-sm" placeholder="101" required>  
+                </div>
+                
+                <div>
+                    <label for="room_name" class="block text-sm font-semibold text-slate-700 mb-1.5">Room Name <span class="text-xs font-normal text-slate-400">(Optional)</span></label>
+                    <input type="text" id="room_name" name="room_name" value="{{ form.room_name.value|default:'' }}" class="block w-full rounded-lg border border-slate-300 bg-slate-50/50 px-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:outline-hidden transition-all duration-150 text-sm" placeholder="Deluxe Suite">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div>
+                    <label for="room_type" class="block text-sm font-semibold text-slate-700 mb-1.5">Room Type</label>
+                    <select id="room_type" name="room_type" class="block w-full rounded-lg border border-slate-300 bg-slate-50/50 px-3.5 py-2.5 text-slate-900 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:outline-hidden transition-all duration-150 text-sm">
+                        <option value="single" {% if form.room_type.value == 'single' %}selected{% endif %}>Single</option>
+                        <option value="double" {% if form.room_type.value == 'double' %}selected{% endif %}>Double</option>
+                        <option value="suite" {% if form.room_type.value == 'suite' %}selected{% endif %}>Suite</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="room_status" class="block text-sm font-semibold text-slate-700 mb-1.5">Initial Status</label>
+                    <select id="room_status" name="room_status" class="block w-full rounded-lg border border-slate-300 bg-slate-50/50 px-3.5 py-2.5 text-slate-900 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:outline-hidden transition-all duration-150 text-sm">
+                        <option value="available" {% if form.room_status.value == 'available' %}selected{% endif %}>Available</option>
+                        <option value="occupied" {% if form.room_status.value == 'occupied' %}selected{% endif %}>Occupied</option>
+                        <option value="Unavailable" {% if form.room_status.value == 'Unavailable' %}selected{% endif %}>Unavailable</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="capacity" class="block text-sm font-semibold text-slate-700 mb-1.5">Capacity</label>
+                    <input type="number" id="capacity" name="capacity" value="{{ form.capacity.value|default:'' }}" class="block w-full rounded-lg border border-slate-300 bg-slate-50/50 px-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:outline-hidden transition-all duration-150 text-sm" placeholder="2" required>
+                </div>
+
+                <div>
+                    <label for="price_per_night" class="block text-sm font-semibold text-slate-700 mb-1.5">Price per Night</label>
+                    <div class="relative rounded-md shadow-xs">
+                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                            <span class="text-slate-400 text-sm">$</span>
+                        </div>
+                        <input type="number" step="0.01" id="price_per_night" name="price_per_night" value="{{ form.price_per_night.value|default:'' }}" class="block w-full rounded-lg border border-slate-300 bg-slate-50/50 pl-7 pr-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:outline-hidden transition-all duration-150 text-sm" placeholder="150.00" required>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label for="description" class="block text-sm font-semibold text-slate-700 mb-1.5">Description</label>
+                <textarea id="description" name="description" rows="4" class="block w-full rounded-lg border border-slate-300 bg-slate-50/50 px-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:outline-hidden transition-all duration-150 text-sm" placeholder="Describe the room layout, views, features..." required>{{ form.description.value|default:'' }}</textarea>
+            </div>
+
+            <div class="relative flex items-start bg-slate-50 border border-slate-200/80 rounded-xl p-4">
+                <div class="flex h-5 items-center">
+                    <input type="checkbox" id="is_available" name="is_available" value="True" {% if form.is_available.value != False %}checked{% endif %} class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500/30">
+                </div>
+                <div class="ml-3 text-sm">
+                    <label for="is_available" class="font-semibold text-slate-800">Publish Listing immediately</label>
+                    <p class="text-xs text-slate-500">Checking this makes the room active and listable across search flows immediately.</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                <button type="submit" class="flex justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition-all duration-150 hover:bg-blue-700 hover:shadow-md active:scale-[0.98] focus:outline-hidden focus:ring-2 focus:ring-blue-500/40">
+                    Save Room Listing
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

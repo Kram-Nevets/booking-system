@@ -1,21 +1,14 @@
+from time import timezone
+
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import UserRegistrationForm, UserLoginForm
-from .models import User, Rooms, Booking
+from .forms import  UserLoginForm, RoomForm 
+from .models import User, Rooms, Booking,Payment
+from admin_side import models
 
 
-def register(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Registration successful. You can now log in.')
-            return redirect('login')
-    else:
-        form = UserRegistrationForm()
-    return render(request, 'user_auth_forms/register.html', {'form': form})
 
 
 def user_login(request):
@@ -46,11 +39,67 @@ def user_logout(request):
 
 @login_required
 def dashboard(request):
-    queryset = Booking.objects.all()
-    return render(request, 'admin_templates/dashboard.html', {'bookings': queryset})
+
+    total_bookings = Booking.objects.select_related('user', 'room').all()
+    total_users = User.objects.count()
+    total_rooms = Rooms.objects.count()
+    total_bookings = Booking.objects.count()
+    upcoming_bookings = Booking.objects.filter(booking_status='pending').count()
+    cancelled_bookings = Booking.objects.filter(booking_status='cancelled').count()
+    occupied_rooms = Rooms.objects.filter(room_status='occupied').count()
+    available_rooms = Rooms.objects.filter(room_status='available').count()
+    cancelled_bookings = Booking.objects.filter(booking_status='cancelled').count()
+    pending_bookings = Booking.objects.filter(booking_status='pending').count()
+    available_rooms = Rooms.objects.filter(room_status='available').count()
+    rooms_unavailable = Rooms.objects.filter(room_status='Unavailable').count()
+
+    
+    return render(request, 'admin_templates/dashboard.html', {
+        'bookings': total_bookings,
+        'total_users': total_users,
+        'total_rooms': total_rooms,
+        'total_bookings': total_bookings,
+        'upcoming_bookings': upcoming_bookings,
+        'cancelled_bookings': cancelled_bookings,
+        'occupied_rooms': occupied_rooms,
+        'available_rooms': available_rooms,
+        'cancelled_bookings': cancelled_bookings,
+        'pending_bookings': pending_bookings,
+        'available_rooms': available_rooms,
+        'rooms_unavailable': rooms_unavailable,
+
+    })
 
 
+@login_required
+def rooms_list(request):
+    rooms = Rooms.objects.all()
+    return render(request, 'admin_templates/rooms.html', {'rooms': rooms})
 
 
+@login_required
+def booking_list(request):
+    bookings = Booking.objects.select_related('user', 'room').all()
+    return render(request, 'admin_templates/bookings.html', {'bookings': bookings})
 
+@login_required
+def room_create(request):
+    if request.method == 'POST':
+        form = RoomForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('rooms_list')
+            
+    else:
+        form = RoomForm()
+
+        print(form.errors)
+    
+    return render(request, 'admin_templates/room_form.html', {'form': form})
+
+def room_delete(request, room_id):
+    room = Rooms.objects.get(id=room_id)
+    room.delete()
+    return redirect('rooms_list')
+ 
 
