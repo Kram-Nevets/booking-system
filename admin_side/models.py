@@ -21,6 +21,10 @@ class User(AbstractUser):
    created_at = models.DateTimeField(auto_now_add=True)
    updated_at = models.DateTimeField(auto_now=True)
 
+   def __str__(self):
+        return self.username
+
+
 
 
 class Rooms(models.Model):
@@ -32,7 +36,7 @@ class Rooms(models.Model):
     ROOM_STATUS_CHOICES = (
         ('available', 'Available'),
         ('occupied', 'Occupied'), 
-        ('Unavailable', 'Unavailable'),
+        ('unavailable', 'Unavailable'),
     )
 
     uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
@@ -47,12 +51,18 @@ class Rooms(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"Room  {self.id}  {self.room_number} - {self.room_name}"
+
 
 class room_images(models.Model):
     room = models.ForeignKey(Rooms, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='room_images/')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Image {self.id} - Room {self.room.room_number}"
 
     
 
@@ -75,6 +85,9 @@ class Booking(models.Model):
     booking_status = models.CharField(max_length=20, choices=BOOKING_STATUS_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Booking {self.uuid} - {self.user.username} - Room {self.room.room_number}"
 
 class Payment(models.Model):
 
@@ -100,6 +113,9 @@ class Payment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"Payment {self.uuid} - {self.booking}"
+
 class Feedback(models.Model):
     uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -109,6 +125,8 @@ class Feedback(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"Feedback {self.uuid} - {self.user.username} - Room {self.room.room_number}"
 
 class UserActivityTracking(models.Model):
 
@@ -117,6 +135,9 @@ class UserActivityTracking(models.Model):
     activity_type = models.CharField(max_length=50)
     activity_description = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Activity {self.uuid} - {self.user.username} - {self.activity_type}"
 
 
 
