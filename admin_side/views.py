@@ -20,8 +20,10 @@ def user_login(request):
             password = user_form.cleaned_data.get('password')
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                login(request, user)
-                return redirect('dashboard')
+                if user.role in ['admin','staff']:
+                    login(request, user)
+                    return redirect('dashboard')
+                messages.error(request,'Permission for the account has not granted')
             else:
                 messages.error(request, 'Invalid username or password.')
                 return redirect('login')
