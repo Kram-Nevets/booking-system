@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import uuid
+from cloudinary.models import CloudinaryField
 
 
 
@@ -57,7 +58,8 @@ class Rooms(models.Model):
 
 class room_images(models.Model):
     room = models.ForeignKey(Rooms, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='room_images/')
+    image = CloudinaryField('image',folder='room_images')
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
