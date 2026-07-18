@@ -1,14 +1,37 @@
 from rest_framework import serializers
 from admin_side.models import User, Rooms, Booking, Payment, Feedback, UserActivityTracking, room_images
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name','last_name','phone_number','email','role','is_active','created_at','updated_at']
+        fields = ['username','email','password','first_name','last_name','phone_number']
 
-        read_only_fields = ['created_at','updated_at']
+        extra_kwargs = {
+            'password': {
+                'write_only': True
+            }
+        }
+
+    def create(self,validated_data):
+        user = User.objects.create_user(
+            **validated_data
+        )
+        
+        return user
+    
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+    def validate(self, attrs):
+        self.token = attrs['refresh']
+        return attrs
+
+    def save(self, **kwargs):
+        refresh_token = RefreshToken(self.token)
+        refresh_token.blacklist()
 
 class RoomImagesSerializer(serializers.ModelSerializer):
     class Meta:
