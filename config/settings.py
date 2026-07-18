@@ -71,11 +71,13 @@ INSTALLED_APPS = [
     'API',
     'cloudinary',
     'cloudinary_storage',
+    'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
     
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -190,6 +192,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 
