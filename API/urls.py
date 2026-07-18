@@ -1,5 +1,5 @@
 from django.urls import path,include
-from .views import UserView,RoomsAPI,RoomDetailsAPI,BookingAPI,RoomImagesAPI,ViewRoomImageAPI,PaymentAPI,PaymentDetailAPI,FeedBackAPI,UserTrackerActivityAPI
+from .views import UserView,RoomsAPI,RoomDetailsAPI,BookingAPI,RoomImagesAPI,ViewRoomImageAPI,PaymentAPI,PaymentDetailAPI,FeedBackAPI,UserTrackerActivityAPI,CreateUserApi,LogoutView
 from rest_framework.routers import DefaultRouter
 
 
@@ -11,6 +11,8 @@ router.register('feedback',FeedBackAPI,basename='user_feedback')
 
 urlpatterns = [
     path('users/',UserView.as_view(),name = 'user_view'),
+    path('create_users/',CreateUserApi.as_view(),name = 'create_user'),
+    path('logout/',LogoutView.as_view(),name = 'logout'),
     path('rooms/',RoomsAPI.as_view(),name='rooms'),
     path('rooms/<uuid:uuid>/',RoomDetailsAPI.as_view(),name = 'room_view'),
     path('rooms/room_image/',RoomImagesAPI.as_view(),name = 'RoomImageList'),
