@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
-from .serializers import UserSerializer, RoomsSerializer, BookingSerializer, PaymentSerializer, FeedbackSerializer, UserActivityTrackingSerializer, RoomImagesSerializer
-from admin_side.models import  Rooms, Booking, Payment, Feedback, UserActivityTracking, room_images
-from rest_framework.permissions import IsAuthenticated
+from .serializers import UserSerializer, RoomsSerializer, BookingSerializer, PaymentSerializer, FeedbackSerializer, UserActivityTrackingSerializer, RoomImagesSerializer,LogoutSerializer
+from admin_side.models import  Rooms, Booking, Payment, Feedback, UserActivityTracking, room_images,User
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView,ListAPIView,RetrieveAPIView,CreateAPIView
 from rest_framework.viewsets import ModelViewSet
@@ -10,13 +10,36 @@ from rest_framework.viewsets import ModelViewSet
 
 
 class UserView(APIView):
-
     permission_classes = [IsAuthenticated]
     def get(self, request):
         user_serializer = UserSerializer(request.user)
 
         return Response(user_serializer.data)
     
+
+class CreateUserApi(CreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = UserSerializer
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        serializer = LogoutSerializer(data=request.data)
+
+        serializer.is_valid(
+            raise_exception=True
+        )
+
+        serializer.save()
+
+        return Response(
+            {
+                "message": "Successfully logged out"
+            }
+
+        )
 
 
 class RoomsAPI(ListAPIView):
